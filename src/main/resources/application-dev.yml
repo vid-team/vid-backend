@@ -7,15 +7,17 @@ spring:
       on-profile: dev
 
   jpa:
+    database-platform: H2
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
+        show_sql: true
         format_sql: true
-    show-sql: true
 
   datasource:
-    url: jdbc:h2:tcp://localhost:9092/mem:testdb
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    hikari:
+      jdbc-url: jdbc:h2:tcp://localhost:9092/~/vid/database/vid-h2
+      driver-class-name: org.h2.Driver
+      username: sa
+      password:
