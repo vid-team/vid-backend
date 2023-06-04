@@ -2,22 +2,36 @@ server:
   port: 8089
 
 spring:
-  config:
-    activate:
-      on-profile: dev
-
   jpa:
-    database-platform: H2
+    show-sql: true
+    generate-ddl: true
     hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
+      ddl-auto: validate
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false
 
-  datasource:
-    hikari:
-      jdbc-url: jdbc:h2:tcp://localhost:9092/~/vid/database/vid-h2
-      driver-class-name: org.h2.Driver
-      username: sa
-      password:
+database:
+  master:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbc-url: jdbc:mysql://localhost:3306/vid_master?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password:
+    maximum-poll-size: 5
+    minimum-idle: 5
+    connection-timeout: 5000
+
+  slave:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbc-url: jdbc:mysql://localhost:3306/vid_slave?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password:
+    maximum-poll-size: 5
+    minimum-idle: 5
+    connection-timeout: 5000
+    read-only: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
