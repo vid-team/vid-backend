@@ -13,17 +13,17 @@ public class ApplicationException extends RuntimeException {
         errorCode = ErrorCode.SERVER_ERROR;
     }
 
-    public ApplicationException(String message) {
+    public ApplicationException(final String message) {
         super(message);
         errorCode = ErrorCode.SERVER_ERROR;
     }
 
-    public ApplicationException(ErrorCode errorCode) {
+    public ApplicationException(final ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
 
-    public ApplicationException(String message, ErrorCode errorCode) {
+    public ApplicationException(final String message, final ErrorCode errorCode) {
         super(message);
         this.errorCode = errorCode;
     }
