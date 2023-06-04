@@ -32,11 +32,11 @@ public class ErrorResponse {
         return new ErrorResponse(code);
     }
 
-    public static ErrorResponse of(final ErrorCode code, List<FieldError> errors) {
+    public static ErrorResponse of(final ErrorCode code, final List<FieldError> errors) {
         return new ErrorResponse(code, errors);
     }
 
-    public static ErrorResponse of(final ErrorCode code, BindingResult bindingResult) {
+    public static ErrorResponse of(final ErrorCode code, final BindingResult bindingResult) {
         return new ErrorResponse(code, FieldError.of(bindingResult));
     }
 
@@ -53,7 +53,7 @@ public class ErrorResponse {
             this.reason = reason;
         }
 
-        public static List<FieldError> of(final String field, final  String value, final String reason) {
+        public static List<FieldError> of(final String field, final String value, final String reason) {
             return List.of(new FieldError(field, value, reason));
         }
 
