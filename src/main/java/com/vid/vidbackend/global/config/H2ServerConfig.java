@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 @Slf4j
-@Profile("dev")
+@Profile("local")
 @Configuration
 public class H2ServerConfig {
 
