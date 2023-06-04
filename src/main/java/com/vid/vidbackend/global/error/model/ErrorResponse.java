@@ -1,4 +1,4 @@
-package com.vid.vidbackend.global.errors;
+package com.vid.vidbackend.global.error.model;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ErrorResponse {
 
+    private int status;
     private String code;
-    private String status;
     private String message;
     private List<FieldError> errors;
 
     private ErrorResponse(final ErrorCode code) {
-        this.code = code.getCode();
         this.status = code.getStatus();
+        this.code = code.getCode();
         this.message = code.getMessage();
     }
 
