@@ -1,4 +1,5 @@
 # vid-backend
 
 ## 🧩 ERD
-![image](https://github.com/vid-team/vid-backend/assets/85760471/732caccd-2956-47e7-ac56-ca8df4739531)
+![ERD-image](https://github.com/vid-team/vid-backend/assets/85760471/a8a28429-8512-4c49-9ee1-0c6c44fcfac1)
+
