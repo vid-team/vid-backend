@@ -23,6 +23,7 @@ import java.util.List;
 @Entity
 @Table(name="users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Getter
 public class User extends BaseTimeEntity {
 
@@ -46,7 +47,7 @@ public class User extends BaseTimeEntity {
     private String imageUrl;
 
     @Column(nullable = false)
-    private boolean isAuthority;
+    private boolean mobileAuthenticated;
 
     @Column(nullable = false)
     private int xp;
@@ -72,14 +73,14 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 
-    @Builder
-    public User(Long id, String name, String email, String password, String phone, String imageUrl, int xp, Rank rank, OauthProvider oauthProvider, String oauthId, Role role, List<Address> addresses) {
+    public User(Long id, String name, String email, String password, String phone, String imageUrl, boolean mobileAuthenticated, int xp, Rank rank, OauthProvider oauthProvider, String oauthId, Role role, List<Address> addresses) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.imageUrl = imageUrl;
+        this.mobileAuthenticated = mobileAuthenticated;
         this.xp = xp;
         this.rank = rank;
         this.oauthProvider = oauthProvider;
@@ -88,12 +89,12 @@ public class User extends BaseTimeEntity {
         this.addresses = addresses;
     }
 
-    public void increaseXp(int amount) {
+    public void increaseXp(final int amount) {
         this.xp += amount;
         updateRank();
     }
 
-    public void decreaseXp(int amount) {
+    public void decreaseXp(final int amount) {
         this.xp -= amount;
         if (this.xp < 0) {
             this.xp = 0;
@@ -101,37 +102,49 @@ public class User extends BaseTimeEntity {
         updateRank();
     }
 
-    public void addAddress(Address address) {
+    public void addAddress(final Address address) {
         this.addresses.add(address);
     }
 
-    public void updateName(String name) {
+    public void updateName(final String name) {
         if (name != null) {
             this.name = name;
         }
     }
 
-    public void updatePassword(String password) {
+    public void updatePassword(final String password) {
         if (password != null) {
             this.password = password;
         }
     }
 
-    public void updateImageUrl(String imageUrl) {
+    public void updateImageUrl(final String imageUrl) {
         if (imageUrl != null) {
             this.imageUrl = imageUrl;
         }
+    }
+
+    public void updateMobileAuthenticated(final boolean mobileAuthenticated) {
+        if (mobileAuthenticated) {
+            return;
+        }
+
+        this.mobileAuthenticated = mobileAuthenticated;
     }
 
     private void updateRank() {
         this.rank = Rank.getRankForXp(this.xp);;
     }
 
-    public void updateAddress(Address address) {
+    public void updateAddress(final Address address) {
         int index = this.addresses.indexOf(address);
         if (index == -1) {
             throw new AddressNotFoundException();
         }
         this.addresses.set(index, address);
+    }
+
+    public boolean isAuthenticated() {
+        return this.mobileAuthenticated;
     }
 }
