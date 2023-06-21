@@ -1,6 +1,7 @@
 package com.vid.vidbackend.domain.user.entity;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
 public class Address {
@@ -44,16 +46,6 @@ public class Address {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-    private Address(Long id, String title, int zipcode, String line, String detail, String description, User user) {
-        this.id = id;
-        this.title = title;
-        this.zipcode = zipcode;
-        this.line = line;
-        this.detail = detail;
-        this.description = description;
-        this.user = user;
-    }
 
     @Override
     public boolean equals(Object o) {
