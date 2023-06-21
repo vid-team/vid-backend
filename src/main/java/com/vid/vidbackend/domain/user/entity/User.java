@@ -133,7 +133,7 @@ public class User extends BaseTimeEntity {
     }
 
     private void updateRank() {
-        this.rank = Rank.getRankForXp(this.xp);;
+        this.rank = Rank.getRankForXp(this.xp);
     }
 
     public void updateAddress(final Address address) {
