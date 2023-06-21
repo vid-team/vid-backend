@@ -1,17 +1,70 @@
 package com.vid.vidbackend.domain.user.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.util.Objects;
 
-@Embeddable
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@Getter
 public class Address {
-    private String city;
-    private String street;
-    private String zipcode;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 20)
+    private String title;
+
+    @Column(nullable = false, length = 10)
+    private int zipcode;
+
+    @Column(nullable = false, length = 200)
+    private String line;
+
+    @Column(nullable = false, length = 200)
+    private String detail;
+
+    @Column(length = 200)
+    private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    private Address(Long id, String title, int zipcode, String line, String detail, String description, User user) {
+        this.id = id;
+        this.title = title;
+        this.zipcode = zipcode;
+        this.line = line;
+        this.detail = detail;
+        this.description = description;
+        this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(id, address.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
