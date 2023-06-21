@@ -1,5 +1,7 @@
-package com.vid.vidbackend.domain.user.entity;
+package com.vid.vidbackend.domain.notification.entity;
 
+import com.vid.vidbackend.domain.user.entity.User;
+import com.vid.vidbackend.global.domain.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,49 +16,35 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.util.Objects;
-
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class Address {
+public class Notification extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 30)
     private String title;
 
-    @Column(nullable = false, length = 10)
-    private int zipcode;
+    @Column(nullable = false, length = 500)
+    private String message;
 
-    @Column(nullable = false, length = 200)
-    private String line;
-
-    @Column(nullable = false, length = 200)
-    private String detail;
-
-    @Column(length = 200)
-    private String description;
+    @Column(nullable = false)
+    private boolean isRead;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Address address = (Address) o;
-        return Objects.equals(id, address.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public void read() {
+        if (this.isRead) {
+            return;
+        }
+        this.isRead = true;
     }
 }

@@ -1,8 +1,10 @@
 package com.vid.vidbackend.domain.user.entity;
 
+import com.vid.vidbackend.domain.notification.entity.Notification;
 import com.vid.vidbackend.exception.address.AddressNotFoundException;
 import com.vid.vidbackend.global.domain.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.List;
 @Entity
 @Table(name="users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
 public class User extends BaseTimeEntity {
@@ -73,21 +76,9 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 
-    public User(Long id, String name, String email, String password, String phone, String imageUrl, boolean mobileAuthenticated, int xp, Rank rank, OauthProvider oauthProvider, String oauthId, Role role, List<Address> addresses) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.imageUrl = imageUrl;
-        this.mobileAuthenticated = mobileAuthenticated;
-        this.xp = xp;
-        this.rank = rank;
-        this.oauthProvider = oauthProvider;
-        this.oauthId = oauthId;
-        this.role = role;
-        this.addresses = addresses;
-    }
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Notification> notifications = new ArrayList<>();
 
     public void increaseXp(final int amount) {
         this.xp += amount;
@@ -104,6 +95,10 @@ public class User extends BaseTimeEntity {
 
     public void addAddress(final Address address) {
         this.addresses.add(address);
+    }
+
+    public void addNotification(final Notification notification) {
+        this.notifications.add(notification);
     }
 
     public void updateName(final String name) {
