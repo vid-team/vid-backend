@@ -59,4 +59,8 @@ public class Address {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
