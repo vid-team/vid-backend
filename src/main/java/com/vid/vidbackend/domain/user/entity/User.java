@@ -20,7 +20,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="users")
@@ -80,6 +82,10 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "blockedUser", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Set<UserBlock> blockedUsers = new HashSet<>();
+
     public void increaseXp(final int amount) {
         this.xp += amount;
         updateRank();
@@ -95,10 +101,23 @@ public class User extends BaseTimeEntity {
 
     public void addAddress(final Address address) {
         this.addresses.add(address);
+        address.setUser(this);
     }
 
     public void addNotification(final Notification notification) {
         this.notifications.add(notification);
+    }
+
+    public void blockUser(User blockedUser, BlockReason reason) {
+        blockedUsers.add(UserBlock.builder()
+                .user(this)
+                .blockedUser(blockedUser)
+                .reason(reason)
+                .build());
+    }
+
+    public void unblockUser(User blockedUser) {
+        blockedUsers.removeIf(userBlock -> userBlock.getBlockedUser().equals(blockedUser));
     }
 
     public void updateName(final String name) {

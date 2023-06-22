@@ -1,5 +1,6 @@
 package com.vid.vidbackend.domain.user.entity;
 
+import com.vid.vidbackend.global.domain.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,51 +19,39 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.util.Objects;
 
-
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
-public class Address {
+public class UserBlock extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 20)
-    private String title;
-
-    @Column(nullable = false, length = 10)
-    private int zipcode;
-
-    @Column(nullable = false, length = 200)
-    private String line;
-
-    @Column(nullable = false, length = 200)
-    private String detail;
-
-    @Column(length = 200)
-    private String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "blocked_user_id", nullable = false)
+    private User blockedUser;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 45)
+    private BlockReason reason;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Address address = (Address) o;
-        return Objects.equals(id, address.id);
+        UserBlock userBlock = (UserBlock) o;
+        return Objects.equals(id, userBlock.id);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }
