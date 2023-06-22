@@ -80,6 +80,10 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<UserBlock> blockedUsers = new ArrayList<>();
+
     public void increaseXp(final int amount) {
         this.xp += amount;
         updateRank();
