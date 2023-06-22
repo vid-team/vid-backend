@@ -1,6 +1,7 @@
 package com.vid.vidbackend.domain.user.entity;
 
 import com.vid.vidbackend.domain.notification.entity.Notification;
+import com.vid.vidbackend.domain.product.entity.Product;
 import com.vid.vidbackend.exception.address.AddressNotFoundException;
 import com.vid.vidbackend.global.domain.BaseTimeEntity;
 import lombok.AccessLevel;
@@ -86,6 +87,10 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "blockedUser", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<UserBlock> blockedUsers = new HashSet<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Product> products = new ArrayList<>();
+
     public void increaseXp(final int amount) {
         this.xp += amount;
         updateRank();
@@ -97,11 +102,6 @@ public class User extends BaseTimeEntity {
             this.xp = 0;
         }
         updateRank();
-    }
-
-    public void addAddress(final Address address) {
-        this.addresses.add(address);
-        address.setUser(this);
     }
 
     public void addNotification(final Notification notification) {
