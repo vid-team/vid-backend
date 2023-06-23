@@ -34,11 +34,4 @@ public class ProductClickLog extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
-
-    public static ProductClickLog create(User user, Product product) {
-        return ProductClickLog.builder()
-                .user(user)
-                .product(product)
-                .build();
-    }
 }
