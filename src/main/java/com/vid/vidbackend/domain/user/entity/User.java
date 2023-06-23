@@ -4,6 +4,7 @@ import com.vid.vidbackend.domain.favoriteproduct.entity.FavoriteProduct;
 import com.vid.vidbackend.domain.notification.entity.Notification;
 import com.vid.vidbackend.domain.product.entity.Product;
 import com.vid.vidbackend.domain.product.entity.ProductClickLog;
+import com.vid.vidbackend.domain.userreview.entity.UserReview;
 import com.vid.vidbackend.exception.address.AddressNotFoundException;
 import com.vid.vidbackend.global.domain.MutableBaseEntity;
 import lombok.AccessLevel;
@@ -30,7 +31,7 @@ import java.util.Set;
 @Entity
 @Table(name="users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
 public class User extends MutableBaseEntity {
@@ -100,6 +101,14 @@ public class User extends MutableBaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<ProductClickLog> productClickLogs = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "reviewer")
+    private List<UserReview> givenReviews = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "reviewee", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<UserReview> receivedReviews = new ArrayList<>();
 
     public void updateName(final String name) {
         if (name != null) {
