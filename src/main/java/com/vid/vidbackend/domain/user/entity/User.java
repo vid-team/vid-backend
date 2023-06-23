@@ -3,6 +3,7 @@ package com.vid.vidbackend.domain.user.entity;
 import com.vid.vidbackend.domain.favoriteproduct.entity.FavoriteProduct;
 import com.vid.vidbackend.domain.notification.entity.Notification;
 import com.vid.vidbackend.domain.product.entity.Product;
+import com.vid.vidbackend.domain.product.entity.ProductClickLog;
 import com.vid.vidbackend.exception.address.AddressNotFoundException;
 import com.vid.vidbackend.global.domain.MutableBaseEntity;
 import lombok.AccessLevel;
@@ -95,6 +96,10 @@ public class User extends MutableBaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<FavoriteProduct> favoriteProducts = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private List<ProductClickLog> productClickLogs = new ArrayList<>();
 
     public void updateName(final String name) {
         if (name != null) {
