@@ -1,9 +1,10 @@
 package com.vid.vidbackend.domain.user.entity;
 
+import com.vid.vidbackend.domain.favoriteproduct.entity.FavoriteProduct;
 import com.vid.vidbackend.domain.notification.entity.Notification;
 import com.vid.vidbackend.domain.product.entity.Product;
 import com.vid.vidbackend.exception.address.AddressNotFoundException;
-import com.vid.vidbackend.global.domain.BaseTimeEntity;
+import com.vid.vidbackend.global.domain.MutableBaseEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +32,7 @@ import java.util.Set;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class User extends BaseTimeEntity {
+public class User extends MutableBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -91,34 +92,9 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
 
-    public void increaseXp(final int amount) {
-        this.xp += amount;
-        updateRank();
-    }
-
-    public void decreaseXp(final int amount) {
-        this.xp -= amount;
-        if (this.xp < 0) {
-            this.xp = 0;
-        }
-        updateRank();
-    }
-
-    public void addNotification(final Notification notification) {
-        this.notifications.add(notification);
-    }
-
-    public void blockUser(User blockedUser, BlockReason reason) {
-        blockedUsers.add(UserBlock.builder()
-                .user(this)
-                .blockedUser(blockedUser)
-                .reason(reason)
-                .build());
-    }
-
-    public void unblockUser(User blockedUser) {
-        blockedUsers.removeIf(userBlock -> userBlock.getBlockedUser().equals(blockedUser));
-    }
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<FavoriteProduct> favoriteProducts = new ArrayList<>();
 
     public void updateName(final String name) {
         if (name != null) {
@@ -160,5 +136,52 @@ public class User extends BaseTimeEntity {
 
     public boolean isAuthenticated() {
         return this.mobileAuthenticated;
+    }
+
+    public void increaseXp(final int amount) {
+        this.xp += amount;
+        updateRank();
+    }
+
+    public void decreaseXp(final int amount) {
+        this.xp -= amount;
+        if (this.xp < 0) {
+            this.xp = 0;
+        }
+        updateRank();
+    }
+
+    public void addNotification(final Notification notification) {
+        this.notifications.add(notification);
+    }
+
+    public void blockUser(final User blockedUser, final BlockReason reason) {
+        blockedUsers.add(UserBlock.builder()
+                .user(this)
+                .blockedUser(blockedUser)
+                .reason(reason)
+                .build());
+    }
+
+    public void unblockUser(final User blockedUser) {
+        blockedUsers.removeIf(userBlock -> userBlock.getBlockedUser().equals(blockedUser));
+    }
+
+    public void addFavoriteProduct(final Product product) {
+        FavoriteProduct favoriteProduct = FavoriteProduct.builder()
+                .user(this)
+                .product(product)
+                .build();
+        this.favoriteProducts.add(favoriteProduct);
+        product.getFavoriteUsers().add(favoriteProduct);
+    }
+
+    public void removeFavoriteProduct(final Product product) {
+        FavoriteProduct favoriteProduct = FavoriteProduct.builder()
+                .user(this)
+                .product(product)
+                .build();
+        this.favoriteProducts.remove(favoriteProduct);
+        product.getFavoriteUsers().remove(favoriteProduct);
     }
 }
