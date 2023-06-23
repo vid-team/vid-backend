@@ -1,5 +1,6 @@
 package com.vid.vidbackend.domain.product.entity;
 
+import com.vid.vidbackend.domain.favoriteproduct.entity.FavoriteProduct;
 import com.vid.vidbackend.domain.user.entity.User;
 import com.vid.vidbackend.global.domain.MutableBaseEntity;
 import lombok.AccessLevel;
@@ -64,6 +65,10 @@ public class Product extends MutableBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FavoriteProduct> favoriteUsers = new ArrayList<>();
 
     public void increaseViewCount() {
         this.viewCount += 1;
