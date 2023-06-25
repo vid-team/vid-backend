@@ -2,6 +2,7 @@ package com.vid.vidbackend.domain.user.entity;
 
 import com.vid.vidbackend.domain.favoriteproduct.entity.FavoriteProduct;
 import com.vid.vidbackend.domain.notification.entity.Notification;
+import com.vid.vidbackend.domain.priceoffer.entity.PriceOffer;
 import com.vid.vidbackend.domain.product.entity.Product;
 import com.vid.vidbackend.domain.product.entity.ProductClickLog;
 import com.vid.vidbackend.domain.userreview.entity.UserReview;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -110,6 +111,14 @@ public class User extends MutableBaseEntity {
     @OneToMany(mappedBy = "reviewee", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<UserReview> receivedReviews = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "offeringUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PriceOffer> offeredPriceOffers = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "receivingUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PriceOffer> receivedPriceOffers = new ArrayList<>();
+
     public void updateName(final String name) {
         if (name != null) {
             this.name = name;
@@ -128,12 +137,12 @@ public class User extends MutableBaseEntity {
         }
     }
 
-    public void updateMobileAuthenticated(final boolean mobileAuthenticated) {
+    public void authenticateMobile() {
         if (mobileAuthenticated) {
             return;
         }
 
-        this.mobileAuthenticated = mobileAuthenticated;
+        this.mobileAuthenticated = true;
     }
 
     private void updateRank() {
