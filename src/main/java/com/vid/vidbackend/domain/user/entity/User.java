@@ -1,5 +1,6 @@
 package com.vid.vidbackend.domain.user.entity;
 
+import com.vid.vidbackend.domain.auction.entity.Auction;
 import com.vid.vidbackend.domain.favoriteproduct.entity.FavoriteProduct;
 import com.vid.vidbackend.domain.notification.entity.Notification;
 import com.vid.vidbackend.domain.priceoffer.entity.PriceOffer;
@@ -14,7 +15,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -28,6 +28,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REMOVE;
 
 @Entity
 @Table(name = "users")
@@ -80,23 +84,23 @@ public class User extends MutableBaseEntity {
     private Role role = Role.GUEST;
 
     @Builder.Default
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = REMOVE, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = REMOVE, orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "blockedUser", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "blockedUser", cascade = REMOVE, orphanRemoval = true)
     private Set<UserBlock> blockedUsers = new HashSet<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = REMOVE, orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = REMOVE, orphanRemoval = true)
     private List<FavoriteProduct> favoriteProducts = new ArrayList<>();
 
     @Builder.Default
@@ -108,16 +112,20 @@ public class User extends MutableBaseEntity {
     private List<UserReview> givenReviews = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "reviewee", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "reviewee", cascade = REMOVE, orphanRemoval = true)
     private List<UserReview> receivedReviews = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "offeringUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "offeringUser", cascade = ALL, orphanRemoval = true)
     private List<PriceOffer> offeredPriceOffers = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "receivingUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "receivingUser", cascade = ALL, orphanRemoval = true)
     private List<PriceOffer> receivedPriceOffers = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = {PERSIST, REMOVE}, orphanRemoval = true)
+    private List<Auction> auctions = new ArrayList<>();
 
     public void updateName(final String name) {
         if (name != null) {
@@ -176,6 +184,11 @@ public class User extends MutableBaseEntity {
 
     public void addNotification(final Notification notification) {
         this.notifications.add(notification);
+    }
+
+    public void addAuction(final Auction auction) {
+        this.auctions.add(auction);
+        auction.setUser(this);
     }
 
     public void blockUser(final User blockedUser, final BlockReason reason) {

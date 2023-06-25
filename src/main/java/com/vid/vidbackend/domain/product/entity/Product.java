@@ -1,5 +1,6 @@
 package com.vid.vidbackend.domain.product.entity;
 
+import com.vid.vidbackend.domain.auction.entity.Auction;
 import com.vid.vidbackend.domain.favoriteproduct.entity.FavoriteProduct;
 import com.vid.vidbackend.domain.priceoffer.entity.PriceOffer;
 import com.vid.vidbackend.domain.producttag.entity.ProductTag;
@@ -23,6 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +81,9 @@ public class Product extends MutableBaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProductTag> productTags = new ArrayList<>();
+
+    @OneToOne(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Auction auction;
 
     public void increaseViewCount() {
         this.viewCount += 1;
