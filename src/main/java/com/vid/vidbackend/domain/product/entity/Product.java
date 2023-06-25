@@ -2,6 +2,7 @@ package com.vid.vidbackend.domain.product.entity;
 
 import com.vid.vidbackend.domain.favoriteproduct.entity.FavoriteProduct;
 import com.vid.vidbackend.domain.priceoffer.entity.PriceOffer;
+import com.vid.vidbackend.domain.producttag.entity.ProductTag;
 import com.vid.vidbackend.domain.user.entity.User;
 import com.vid.vidbackend.global.domain.MutableBaseEntity;
 import lombok.AccessLevel;
@@ -74,6 +75,10 @@ public class Product extends MutableBaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PriceOffer> priceOffers = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ProductTag> productTags = new ArrayList<>();
 
     public void increaseViewCount() {
         this.viewCount += 1;
