@@ -40,7 +40,7 @@ public class Auction extends MutableBaseEntity {
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 15)
-    private AuctionStatus status = AuctionStatus.IN_PROGRESS;
+    private AuctionStatus status = AuctionStatus.PENDING;
 
     @Column(nullable = false)
     private LocalDateTime deadline;
