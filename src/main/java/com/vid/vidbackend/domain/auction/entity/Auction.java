@@ -1,5 +1,6 @@
 package com.vid.vidbackend.domain.auction.entity;
 
+import com.vid.vidbackend.domain.bid.entity.Bid;
 import com.vid.vidbackend.domain.product.entity.Product;
 import com.vid.vidbackend.domain.user.entity.User;
 import com.vid.vidbackend.global.domain.MutableBaseEntity;
@@ -19,9 +20,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REMOVE;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -53,6 +60,10 @@ public class Auction extends MutableBaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "auction", cascade = {PERSIST, REMOVE}, orphanRemoval = true)
+    private List<Bid> bids = new ArrayList<>();
+
     @PrePersist
     public void calculateDeadline() {
         if (duration == null) {
@@ -65,4 +76,6 @@ public class Auction extends MutableBaseEntity {
     public void setUser(User user) {
         this.user = user;
     }
+
+    //TODO bid()
 }
