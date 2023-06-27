@@ -12,7 +12,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -27,6 +26,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
+
+import static javax.persistence.CascadeType.REMOVE;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -59,7 +60,7 @@ public class Product extends MutableBaseEntity {
     private long viewCount;
 
     @Builder.Default
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = REMOVE, orphanRemoval = true)
     private List<ProductImage> images = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -71,19 +72,22 @@ public class Product extends MutableBaseEntity {
     private User user;
 
     @Builder.Default
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = REMOVE, orphanRemoval = true)
     private List<FavoriteProduct> favoriteUsers = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = REMOVE, orphanRemoval = true)
     private List<PriceOffer> priceOffers = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = REMOVE, orphanRemoval = true)
     private List<ProductTag> productTags = new ArrayList<>();
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne(mappedBy = "product", cascade = REMOVE, orphanRemoval = true)
     private Auction auction;
+
+    //TODO statAuction()
+    //TODO endAuction() -> if (auction == AuctionStatus.IN_PROGRESS)
 
     public void increaseViewCount() {
         this.viewCount += 1;

@@ -1,6 +1,7 @@
 package com.vid.vidbackend.domain.user.entity;
 
 import com.vid.vidbackend.domain.auction.entity.Auction;
+import com.vid.vidbackend.domain.bid.entity.Bid;
 import com.vid.vidbackend.domain.favoriteproduct.entity.FavoriteProduct;
 import com.vid.vidbackend.domain.notification.entity.Notification;
 import com.vid.vidbackend.domain.priceoffer.entity.PriceOffer;
@@ -126,6 +127,10 @@ public class User extends MutableBaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = {PERSIST, REMOVE}, orphanRemoval = true)
     private List<Auction> auctions = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = REMOVE, orphanRemoval = true)
+    private List<Bid> bids = new ArrayList<>();
 
     public void updateName(final String name) {
         if (name != null) {
