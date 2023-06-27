@@ -26,6 +26,7 @@ import javax.persistence.PrePersist;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
@@ -64,6 +65,23 @@ public class Auction extends MutableBaseEntity {
     @OneToMany(mappedBy = "auction", cascade = {PERSIST, REMOVE}, orphanRemoval = true)
     private List<Bid> bids = new ArrayList<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Auction auction = (Auction) o;
+        return Objects.equals(id, auction.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @PrePersist
     public void calculateDeadline() {
         if (duration == null) {
@@ -73,9 +91,8 @@ public class Auction extends MutableBaseEntity {
         this.deadline = LocalDateTime.now().plusDays(duration);
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void addBid(Bid bid) {
+        bid.setAuction(this);
+        this.bids.add(bid);
     }
-
-    //TODO bid()
 }
