@@ -33,7 +33,7 @@ public class Delivery extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(unique = true, length = 20)
     private String invoiceNumber;
 
     @Builder.Default
@@ -42,7 +42,7 @@ public class Delivery extends BaseTimeEntity {
     private DeliveryStatus status = DeliveryStatus.PENDING;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id")
+    @JoinColumn(name = "address_id", nullable = false)
     private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)
