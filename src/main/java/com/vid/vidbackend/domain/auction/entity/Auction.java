@@ -1,6 +1,7 @@
 package com.vid.vidbackend.domain.auction.entity;
 
 import com.vid.vidbackend.domain.bid.entity.Bid;
+import com.vid.vidbackend.domain.order.entity.Order;
 import com.vid.vidbackend.domain.product.entity.Product;
 import com.vid.vidbackend.domain.user.entity.User;
 import com.vid.vidbackend.global.domain.MutableBaseEntity;
@@ -65,6 +66,9 @@ public class Auction extends MutableBaseEntity {
     @OneToMany(mappedBy = "auction", cascade = {PERSIST, REMOVE}, orphanRemoval = true)
     private List<Bid> bids = new ArrayList<>();
 
+    @OneToOne(mappedBy = "auction", cascade = REMOVE, orphanRemoval = true)
+    private Order order;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,6 +86,10 @@ public class Auction extends MutableBaseEntity {
         this.user = user;
     }
 
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
     @PrePersist
     public void calculateDeadline() {
         if (duration == null) {
@@ -91,7 +99,7 @@ public class Auction extends MutableBaseEntity {
         this.deadline = LocalDateTime.now().plusDays(duration);
     }
 
-    public void addBid(Bid bid) {
+    public void addBid(final Bid bid) {
         bid.setAuction(this);
         this.bids.add(bid);
     }

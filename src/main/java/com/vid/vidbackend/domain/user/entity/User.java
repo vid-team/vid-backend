@@ -4,6 +4,7 @@ import com.vid.vidbackend.domain.auction.entity.Auction;
 import com.vid.vidbackend.domain.bid.entity.Bid;
 import com.vid.vidbackend.domain.favoriteproduct.entity.FavoriteProduct;
 import com.vid.vidbackend.domain.notification.entity.Notification;
+import com.vid.vidbackend.domain.order.entity.Order;
 import com.vid.vidbackend.domain.priceoffer.entity.PriceOffer;
 import com.vid.vidbackend.domain.product.entity.Product;
 import com.vid.vidbackend.domain.product.entity.ProductClickLog;
@@ -132,6 +133,10 @@ public class User extends MutableBaseEntity {
     @OneToMany(mappedBy = "user", cascade = REMOVE, orphanRemoval = true)
     private List<Bid> bids = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = REMOVE, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
+
     public void updateName(final String name) {
         if (name != null) {
             this.name = name;
@@ -151,11 +156,9 @@ public class User extends MutableBaseEntity {
     }
 
     public void authenticateMobile() {
-        if (mobileAuthenticated) {
-            return;
+        if (!this.mobileAuthenticated) {
+            this.mobileAuthenticated = true;
         }
-
-        this.mobileAuthenticated = true;
     }
 
     private void updateRank() {
@@ -192,8 +195,8 @@ public class User extends MutableBaseEntity {
     }
 
     public void addAuction(final Auction auction) {
-        this.auctions.add(auction);
         auction.setUser(this);
+        this.auctions.add(auction);
     }
 
     public void blockUser(final User blockedUser, final BlockReason reason) {
