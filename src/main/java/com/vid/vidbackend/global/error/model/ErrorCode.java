@@ -5,6 +5,7 @@ import lombok.Getter;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.PRECONDITION_FAILED;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 @Getter
@@ -20,6 +21,9 @@ public enum ErrorCode {
 
     // Auction
     AUCTION_NOT_FOUND(NOT_FOUND.value(), "AU001", "해당 경매는 현재 진행중이지 않습니다."),
+
+    // Order
+    ORDER_NOT_CANCEL(PRECONDITION_FAILED.value(), "OR001", "이미 배송이 완료되었거나 현재 배송중인경우 주문을 취소할 수 없습니다.")
     ;
 
     private final int status;
