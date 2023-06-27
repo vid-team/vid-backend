@@ -1,6 +1,8 @@
 package com.vid.vidbackend.domain.order.entity;
 
 import com.vid.vidbackend.domain.auction.entity.Auction;
+import com.vid.vidbackend.domain.delivery.entity.Delivery;
+import com.vid.vidbackend.domain.user.entity.Address;
 import com.vid.vidbackend.domain.user.entity.User;
 import com.vid.vidbackend.global.domain.MutableBaseEntity;
 import lombok.AccessLevel;
@@ -9,8 +11,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,8 +42,13 @@ public class Order extends MutableBaseEntity {
     private boolean isDepositComplete;
 
     @Builder.Default
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 15)
     private OrderStatus status = OrderStatus.PENDING;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "auction_id", nullable = false)
@@ -48,38 +58,12 @@ public class Order extends MutableBaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Delivery delivery;
+
     public void completeDeposit() {
         if (!this.isDepositComplete) {
             this.isDepositComplete = true;
         }
-    }
-
-    public static Order createOrder(User user, Auction auction) {
-        Order order = new Order();
-        order.setUser(user);
-        order.setAuction(auction);
-        order.setStatus(OrderStatus.ORDER);
-
-        //TODO setDelivery
-
-        return order;
-    }
-
-
-    //TODO createReturnOrder()
-    //TODO cancel() -> if (delivery status == COMP) -> 취소 불가
-
-    private void setUser(User user) {
-        this.user = user;
-        user.getOrders().add(this);
-    }
-
-    private void setAuction(Auction auction) {
-        this.auction = auction;
-        auction.setOrder(this);
-    }
-
-    private void setStatus(OrderStatus status) {
-        this.status = status;
     }
 }
