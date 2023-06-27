@@ -16,7 +16,10 @@ public enum ErrorCode {
     ENTITY_NOT_FOUND(NOT_FOUND.value(), "G003", "Entity Not Found Exception"),
 
     // Address
-    ADDRESS_NOT_FOUND(NOT_FOUND.value(), "A001", "해당 주소는 존재하지 않는 주소입니다.")
+    ADDRESS_NOT_FOUND(NOT_FOUND.value(), "AD001", "해당 주소는 존재하지 않는 주소입니다."),
+
+    // Auction
+    AUCTION_NOT_FOUND(NOT_FOUND.value(), "AU001", "해당 경매는 현재 진행중이지 않습니다."),
     ;
 
     private final int status;
