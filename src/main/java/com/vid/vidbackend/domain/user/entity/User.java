@@ -2,6 +2,7 @@ package com.vid.vidbackend.domain.user.entity;
 
 import com.vid.vidbackend.domain.auction.entity.Auction;
 import com.vid.vidbackend.domain.bid.entity.Bid;
+import com.vid.vidbackend.domain.delivery.entity.Delivery;
 import com.vid.vidbackend.domain.favoriteproduct.entity.FavoriteProduct;
 import com.vid.vidbackend.domain.notification.entity.Notification;
 import com.vid.vidbackend.domain.order.entity.Order;
@@ -94,7 +95,7 @@ public class User extends MutableBaseEntity {
     private List<Notification> notifications = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "blockedUser", cascade = REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "blockedUser", cascade = {PERSIST, REMOVE}, orphanRemoval = true)
     private Set<UserBlock> blockedUsers = new HashSet<>();
 
     @Builder.Default
@@ -136,6 +137,10 @@ public class User extends MutableBaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = REMOVE, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = REMOVE, orphanRemoval = true)
+    private List<Delivery> deliveries = new ArrayList<>();
 
     public void updateName(final String name) {
         if (name != null) {

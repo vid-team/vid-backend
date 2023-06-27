@@ -1,16 +1,15 @@
-package com.vid.vidbackend.domain.order.entity;
+package com.vid.vidbackend.domain.delivery.entity;
 
-import com.vid.vidbackend.domain.auction.entity.Auction;
-import com.vid.vidbackend.domain.delivery.entity.Delivery;
+import com.vid.vidbackend.domain.order.entity.Order;
+import com.vid.vidbackend.domain.user.entity.Address;
 import com.vid.vidbackend.domain.user.entity.User;
-import com.vid.vidbackend.global.domain.MutableBaseEntity;
+import com.vid.vidbackend.global.domain.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -28,37 +27,29 @@ import javax.persistence.OneToOne;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
-public class Order extends MutableBaseEntity {
+public class Delivery extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private int price;
-
-    @Column(nullable = false)
-    private boolean isDepositComplete;
+    @Column(unique = true, length = 20)
+    private String invoiceNumber;
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 15)
-    private OrderStatus status = OrderStatus.PENDING;
+    @Column(nullable = false, length = 20)
+    private DeliveryStatus status = DeliveryStatus.PENDING;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "auction_id", nullable = false)
-    private Auction auction;
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private Delivery delivery;
-
-    public void completeDeposit() {
-        if (!this.isDepositComplete) {
-            this.isDepositComplete = true;
-        }
-    }
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 }
