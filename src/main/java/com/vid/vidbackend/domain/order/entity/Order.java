@@ -2,7 +2,6 @@ package com.vid.vidbackend.domain.order.entity;
 
 import com.vid.vidbackend.domain.auction.entity.Auction;
 import com.vid.vidbackend.domain.delivery.entity.Delivery;
-import com.vid.vidbackend.domain.user.entity.Address;
 import com.vid.vidbackend.domain.user.entity.User;
 import com.vid.vidbackend.global.domain.MutableBaseEntity;
 import lombok.AccessLevel;
@@ -45,10 +44,6 @@ public class Order extends MutableBaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 15)
     private OrderStatus status = OrderStatus.PENDING;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id")
-    private Address address;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "auction_id", nullable = false)

@@ -1,6 +1,7 @@
 package com.vid.vidbackend.domain.delivery.entity;
 
 import com.vid.vidbackend.domain.order.entity.Order;
+import com.vid.vidbackend.domain.user.entity.Address;
 import com.vid.vidbackend.domain.user.entity.User;
 import com.vid.vidbackend.global.domain.BaseTimeEntity;
 import lombok.AccessLevel;
@@ -39,6 +40,10 @@ public class Delivery extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private DeliveryStatus status = DeliveryStatus.PENDING;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
